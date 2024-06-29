@@ -32,14 +32,15 @@ namespace CompliancePortal.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly ICommon _iCommon;
-
+        private readonly IUserService _userService;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext context,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            ICommon iCommon)
+            ICommon iCommon,
+            IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,6 +48,7 @@ namespace CompliancePortal.Controllers
             _emailSender = emailSender;
             _logger = logger;
             _iCommon = iCommon;
+            _userService = userService;
         }
 
         [TempData]
@@ -81,8 +83,13 @@ namespace CompliancePortal.Controllers
                 {
                     ViewBag.IsLoginSucceeded = result.Succeeded;
                     _logger.LogInformation("User logged in.");
-                    return RedirectToAction("Index", "UserManagement");
+
+                    var accountLinkedToEntity = await _userService.GetApplicationUserLinkToEntity(model.Email);
+                    HttpContext.Session.SetString("UserId", accountLinkedToEntity.UserId.ToString());
+                    HttpContext.Session.SetString("LinkToEntityTypeId", accountLinkedToEntity.LinkToEntityTypeId.ToString());
+                    HttpContext.Session.SetString("LinkToEntityTypeValue", accountLinkedToEntity.LinkToEntityTypeValue.ToString());
                     // return RedirectToAction("EnableAuthenticator", "Manage");
+                    return RedirectToAction("Index", "UserManagement");
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -26,7 +26,8 @@ namespace CompliancePortal.Controllers
         private readonly IBranchService branchService;
         public MemberController(UserManager<ApplicationUser> userManager,
             IMemberService memberService,
-            IBranchService branchService) {
+            IBranchService branchService)
+        {
             _userManager = userManager;
             this.memberService = memberService;
             this.branchService = branchService;
@@ -116,7 +117,7 @@ namespace CompliancePortal.Controllers
             }
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> GetMemberById(long id)
         {
@@ -125,7 +126,7 @@ namespace CompliancePortal.Controllers
             return Json(new { data = member });
         }
 
-       
+
         [HttpDelete]
         public async Task<IActionResult> DeleteMember(long id)
         {
@@ -133,25 +134,26 @@ namespace CompliancePortal.Controllers
             return Json(new { data = "Success" });
         }
 
-    
-       
+
+
         [HttpGet]
         public async Task<IActionResult> AddEditMember(long id)
         {
-            BranchMembers _branchViewModel = new BranchMembers();
-            MemberApplicationUser memberDetails = new MemberApplicationUser();
+            var _branchViewModel = new BranchMembers();
+            var memberDetails = new MemberApplicationUser();
             memberDetails.Employers = new();
-            memberDetails.Branches = branchService.GetAllBranches();
             if (id > 0)
             {
                 memberDetails.Member = await memberService.GetMemberByIdAsync(id);
 
                 return PartialView("_EditMember", memberDetails);
             }
+
+            memberDetails.Member = new BranchMembers();
             return PartialView("_AddMember", memberDetails);
         }
 
-        
+
         [HttpPost]
         public async Task<JsonResult> AddEditMember(BranchMembers member)
         {
