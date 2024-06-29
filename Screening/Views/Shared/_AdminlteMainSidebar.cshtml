@@ -1,0 +1,170 @@
+﻿@model CompliancePortal.Models.ApplicationUser;
+@inject CompliancePortal.Data.ApplicationDbContext context;
+@inject CompliancePortal.Services.IRoles _roles;
+
+@using Microsoft.Extensions.Options;
+@inject IOptions<CompliancePortal.Models.CommonViewModel.ApplicationInfo> _ApplicationInfo;
+
+@{
+    UserProfile profile = context.UserProfile.SingleOrDefault(x => x.ApplicationUserId.Equals(Model.Id));
+    var _MainMenuViewModel = await _roles.RolebaseMenuLoad(Model.Id);
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="brand-link">
+            <!--<img src='~/images/logo.png' alt="" class="brand-image img-circle elevation-3"
+                 style="opacity: .8">-->
+            <span class="brand-text font-weight-light">@_ApplicationInfo.Value.Name</span>
+        </a>
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                   
+                    @if (_MainMenuViewModel.Admin)
+                    {
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-clock"></i>
+                                <p>
+                                    User Administration
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @if (_MainMenuViewModel.UserManagement)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@MainMenu.UserManagement.Path" class="nav-link">
+                                            <i class="nav-icon fas fa-user-shield"></i>
+                                            <p>@MainMenu.UserManagement.PageName</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (_MainMenuViewModel.ManagePageAccess)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@MainMenu.ManagePageAccess.Path" class="nav-link">
+                                            <i class="nav-icon fas fa-toolbox"></i>
+                                            <p>@MainMenu.ManagePageAccess.PageName</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (_MainMenuViewModel.EmailSetting)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@MainMenu.EmailSetting.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>@MainMenu.EmailSetting.PageName</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (_MainMenuViewModel.UserProfile)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@MainMenu.UserProfile.Path" class="nav-link">
+                                            <i class="nav-icon fas fa-user-circle"></i>
+                                            <p>@MainMenu.UserProfile.PageName</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (_MainMenuViewModel.LoginHistory)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@MainMenu.LoginHistory.Path" class="nav-link">
+                                            <i class="nav-icon fas fa-history"></i>
+                                            <p>@MainMenu.LoginHistory.PageName</p>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                    @if (_MainMenuViewModel.Region)
+                    {
+                        <li class="nav-item">
+                            <a href="@MainMenu.Region.Path" class="nav-link">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>@MainMenu.Region.PageName</p>
+                            </a>
+                        </li>
+                    }
+                    @if (_MainMenuViewModel.Branch)
+                    {
+                        <li class="nav-item">
+                            <a href="@MainMenu.Branch.Path" class="nav-link">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>@MainMenu.Branch.PageName</p>
+                            </a>
+                        </li>
+                    }
+
+                    @if (_MainMenuViewModel.Member)
+                    {
+                        <li class="nav-item">
+                            <a href="@MainMenu.Member.Path" class="nav-link">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>@MainMenu.Member.PageName</p>
+                            </a>
+                        </li>
+                    }
+
+                    @if (_MainMenuViewModel.Employer)
+                    {
+                        <li class="nav-item">
+                            <a href="@MainMenu.Employer.Path" class="nav-link">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>@MainMenu.Employer.PageName</p>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </aside>
+}
+
+<script>
+    var url = window.location;
+    // for sidebar menu entirely but not cover treeview
+    $('ul.nav-sidebar a').filter(function () {
+        return this.href == url;
+    }).addClass('active');
+
+    // for treeview
+    /*$('ul.nav-treeview a').filter(function () {
+        return this.href == url;
+    }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+
+    $('#company-menu ul.nav-treeview a').filter(function () {
+        return this.href == url;
+    }).parentsUntil("#company-menu").addClass('menu-open').prev('a').addClass('active');
+    */
+
+
+    // Individual menu toggle
+    $('#individual-menu > a').click(function (e) {
+        e.preventDefault();
+        $('#individual-menu > .nav-treeview').slideToggle();
+    }).parentsUntil("#individual-menu").addClass('menu-open').prev('a').addClass('active');
+
+    // Company menu toggle
+    $('#company-menu > a').click(function (e) {
+        e.preventDefault();
+        $('#company-menu > .nav-treeview').slideToggle();
+    }).parentsUntil("#company-menu").addClass('menu-open').prev('a').addClass('active');
+
+    // Partnership menu toggle
+    $('#partnership-menu > a').click(function (e) {
+        e.preventDefault();
+        $('#partnership-menu > .nav-treeview').slideToggle();
+    }).parentsUntil("#partnership-menu").addClass('menu-open').prev('a').addClass('active');
+
+
+</script>
+<style>
+    .os-content {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+</style>

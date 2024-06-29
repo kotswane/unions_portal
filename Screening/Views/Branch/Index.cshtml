@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Branch List";
+}
+
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-success" onclick="AddEditBranch(0)">Add New</button>
+                </div>
+                <div class="col-md-6 pull-right">
+                    <h5 class="pull-right"><b>&nbsp;Branch List</b></h5>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body scroll panel-height">
+            <table id="tblBranch" class="CustomBlueTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Branch ID</th>
+                        <th>Branch Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+
+    img {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 50px;
+    }
+
+        img:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+</style>
+
+<script src="~/js/Branch/Branch_CRUD.js"></script>
+<script src="~/js/Branch/Branch_Data.js"></script>
+

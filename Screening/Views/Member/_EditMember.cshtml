@@ -1,0 +1,108 @@
+﻿@model CompliancePortal.Models.MemberApplicationUser
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="ApplicationUserForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.Member.MemberId" id="MemberId" />
+                <input type="hidden" id="CurrentURL" />
+                
+                <div class="row">
+                   <div class="row">
+                    <div class="col-6 col-sm-6">
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.MemberFirstname" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.Member.MemberFirstname" class="form-control" id="@Model.Member.MemberFirstname" type="text" />
+                                <span asp-validation-for="@Model.Member.MemberFirstname" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.MemberMiddleName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.Member.MemberMiddleName" class="form-control" id="@Model.Member.MemberMiddleName" type="text" />
+                                <span asp-validation-for="@Model.Member.MemberMiddleName" class="text-danger"></span>
+                            </div>
+                        </div>                        
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.MemberSurname" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.Member.MemberSurname" class="form-control" id="@Model.Member.MemberSurname" type="text" />
+                                <span asp-validation-for="@Model.Member.MemberSurname" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.MemberIdNumber" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.Member.MemberIdNumber" class="form-control" id="@Model.Member.MemberIdNumber" type="text" />
+                                <span asp-validation-for="@Model.Member.MemberIdNumber" class="text-danger"></span>
+                            </div>
+                        </div>                      
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.MemberContactNumber" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.Member.MemberContactNumber" class="form-control" id="@Model.Member.MemberContactNumber" type="text" />
+                                <span asp-validation-for="@Model.Member.MemberContactNumber" class="text-danger"></span>
+                            </div>
+                        </div>                         
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.Branch" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <select asp-for="@Model.Member.MemberEmployerId" class="form-control">
+                                    <option value="">Select a Branch</option>
+                                        @foreach (var branch in Model.Branches)
+                                    {
+                                            if (branch.BranchId == Model.Member.MemberBranchId)
+                                        {
+                                                <option value="@branch.BranchId" selected>@Model.Member.MemberBranchId</option>
+                                        }
+                                        else
+                                        {
+                                                <option value="@branch.BranchId">@Model.Member.MemberBranchId</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="@Model.Member.Branch" class="text-danger"></span>
+                            </div>
+                        </div>                        
+                        <div class="form-group row">
+                            <label asp-for="@Model.Member.Employer" class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                    <select asp-for="@Model.Member.MemberEmployerId" class="form-control">
+                                    <option value="">Select an Employer</option>
+                                        @foreach (var employer in Model.Employers)
+                                        {
+                                            if (employer.EmployerId == Model.Member.MemberEmployerId)
+                                            {
+                                                <option value="@employer.EmployerId" selected>@employer.EmployerName</option>
+                                            }else
+                                            {
+                                                <option value="@employer.EmployerId">@employer.EmployerName</option>
+                                            }
+                                         }
+                                    </select>
+                                </div>
+                                <span asp-validation-for="@Model.Member.Employer" class="text-danger"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input type="button" id="btnSave" value="Save" onclick="SaveMember()" class="btn btn-info">
+                                <button type="button" id="btnAddEditMemberClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $('#CurrentURL').val(window.location.pathname);
+</script>
