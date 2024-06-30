@@ -15,7 +15,7 @@
         "orderMulti": false,
         "stateSave": true,
         "ajax": {
-            "url": "/Branch/GetAllBranchMembers",
+            "url": "/Member/GetAllBranchMembers",
             "type": "POST",
             "datatype": "json"
         },

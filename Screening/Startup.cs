@@ -40,10 +40,9 @@ namespace CompliancePortal
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-           ;
             services.AddScoped<ApplicationDbContext>();
 
-            string _GetConnStringMSSQL = Configuration.GetConnectionString("DefaultConnectionMSSQL");            
+            string _GetConnStringMSSQL = Configuration.GetConnectionString("DefaultConnectionMSSQL");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_GetConnStringMSSQL));
 
             //string _GetConnStringMySQL = Configuration.GetConnectionString("DefaultConnectionMySQL");
@@ -63,7 +62,7 @@ namespace CompliancePortal
             var _context = _ServiceProvider.GetRequiredService<ApplicationDbContext>();
             bool IsDBCanConnect = _context.Database.CanConnect();
 
-           if (IsDBCanConnect && _context.DefaultIdentityOptions.Count() > 0)
+            if (IsDBCanConnect && _context.DefaultIdentityOptions.Count() > 0)
                 _DefaultIdentityOptions = _context.DefaultIdentityOptions.Where(x => x.Id == 1).SingleOrDefault();
             else
             {
@@ -89,6 +88,9 @@ namespace CompliancePortal
             services.AddScoped(typeof(IasyncRepository<>), typeof(MemberRepository<>));
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IMemberService, MemberService>();
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddScoped<ApplicationUserRepository>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {

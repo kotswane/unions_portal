@@ -1,16 +1,16 @@
 ﻿var funAction = function (actionId) {
     var _Action = $("#" + actionId).val();
     if (_Action == 1)
-        AddEditBranch(actionId);
+        AddEditMember(actionId);
     else if (_Action == 4)
-        DeleteBranch(actionId);
+        DeleteMember(actionId);
     $("#" + actionId).prop('selectedIndex', 0);
 };
 
 
-var DeleteBranch = function (id) {
+var DeleteMember = function (id) {
     Swal.fire({
-        title: 'Do you want to delete this branch?',
+        title: 'Do you want to delete this Member?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -20,14 +20,14 @@ var DeleteBranch = function (id) {
         if (result.value) {
             $.ajax({
                 type: "DELETE",
-                url: "/Branch/DeleteBranch?id=" + id,
+                url: "/Member/DeleteMember?id=" + id,
                 success: function (result) {
-                    var message = "Branch has been deleted successfully";
+                    var message = "Member has been deleted successfully";
                     Swal.fire({
                         title: message,
                         icon: 'info',
                         onAfterClose: () => {
-                            $('#tblBranch').DataTable().ajax.reload();
+                            $('#tblMember').DataTable().ajax.reload();
                         }
                     });
                 }
@@ -37,59 +37,59 @@ var DeleteBranch = function (id) {
 };
 
 
-var AddEditBranch = function (id) {
-    var url = "/Branch/AddEditBranch?id=" + id;
+var AddEditMember = function (id) {
+    var url = "/Member/AddEditMember?id=" + id;
     if (id > 0) {
-        $('#titleMediumModal').html("Edit Branch");
+        $('#titleMediumModal').html("Edit Member");
     }
     else {
-        $('#titleMediumModal').html("Add Branch");
+        $('#titleMediumModal').html("Add Member");
     }
     loadMediumModal(url);
 
     setTimeout(function () {
-        $('#BranchName').focus();
+        $('#MemberName').focus();
     }, 200);
 };
 
-var SaveBranch = function () {
+var SaveMember = function () {
 
-    if (!FieldValidation('#BranchName')) {
-        FieldValidationAlert('#BranchName', 'Branch Name is Required.', "warning");
+    if (!FieldValidation('#MemberName')) {
+        FieldValidationAlert('#MemberName', 'Member Name is Required.', "warning");
         return;
     }
   
-    var _BranchId = $("#BranchId").val();
-    if (_BranchId > 0) {
-        $("#btnSave").prop('value', 'Updating Branch');
+    var _MemberId = $("#MemberId").val();
+    if (_MemberId > 0) {
+        $("#btnSave").prop('value', 'Updating Member');
     }
     else {
-        $("#btnSave").prop('value', 'Creating Branch');
+        $("#btnSave").prop('value', 'Creating Member');
     }
     $('#btnSave').prop('disabled', true);
 
     $.ajax({
         type: "POST",
-        url: "/Branch/AddEditBranch?id=" + _BranchId,
+        url: "/Member/AddEditMember?id=" + _MemberId,
         data: PreparedFormObj(),
         processData: false,
         contentType: false,
         success: function (result) {
             $('#btnSave').prop('disabled', false);
-            $("#btnAddBranch").prop('value', 'Save');
+            $("#btnAddMember").prop('value', 'Save');
             if (result.IsSuccess) {
                 Swal.fire({
                     title: result.AlertMessage,
                     icon: "success"
                 }).then(function () {
-                    document.getElementById("btnAddEditBranchClose").click();
-                    if ((result.CurrentURL == "/") || ("/Branch/Index")){
+                    document.getElementById("btnAddEditMemberClose").click();
+                    if ((result.CurrentURL == "/") || ("/Member/Index")){
                         setTimeout(function () {
-                            $('#tblBranch').DataTable().ajax.reload();
+                            $('#tblMember').DataTable().ajax.reload();
                         }, 1000);
                     }
                     else {
-                        $('#tblBranch').DataTable().ajax.reload();
+                        $('#tblMember').DataTable().ajax.reload();
                     }
                 });
             }
@@ -113,8 +113,8 @@ var SaveBranch = function () {
 
 var PreparedFormObj = function () {
     var _FormData = new FormData()
-    _FormData.append('BranchId', $("#BranchId").val())
-    _FormData.append('BranchName', $("#BranchName").val())
+    _FormData.append('MemberId', $("#MemberId").val())
+    _FormData.append('MemberName', $("#MemberName").val())
     
     return _FormData;
 }
