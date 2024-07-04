@@ -7,7 +7,6 @@ namespace CompliancePortal.Models
     {
         public BranchMembers Member { get; set; }
         public UserProfileViewModel UserProfileViewModel { get; set; }
-        public IEnumerable<Branch> Branches { get; set; }
         public List<Employer> Employers { get; set; }
     }
 }

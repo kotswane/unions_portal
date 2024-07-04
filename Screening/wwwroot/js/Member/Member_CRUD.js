@@ -27,7 +27,7 @@ var DeleteMember = function (id) {
                         title: message,
                         icon: 'info',
                         onAfterClose: () => {
-                            $('#tblMember').DataTable().ajax.reload();
+                            $('#tblBranchMembers').DataTable().ajax.reload();
                         }
                     });
                 }
@@ -48,18 +48,38 @@ var AddEditMember = function (id) {
     loadMediumModal(url);
 
     setTimeout(function () {
-        $('#MemberName').focus();
+        $('#Member_MemberFirstname').focus();
     }, 200);
 };
 
 var SaveMember = function () {
 
-    if (!FieldValidation('#MemberName')) {
-        FieldValidationAlert('#MemberName', 'Member Name is Required.', "warning");
+    if (!FieldValidation('#Member_MemberFirstname')) {
+        FieldValidationAlert('#Member_MemberFirstname', 'Member Name is Required.', "warning");
+        return;
+    }
+    if (!FieldValidation('#Member_MemberSurname')) {
+        FieldValidationAlert('#Member_MemberSurname', 'Member Surname is Required.', "warning");
+        return;
+    }
+    if (!FieldValidation('#Member_MemberIdNumber')) {
+        FieldValidationAlert('#Member_MemberIdNumber', 'Member ID number is Required.', "warning");
+        return;
+    }
+    if (!FieldValidation('#Member_MemberContactNumber')) {
+        FieldValidationAlert('#Member_MemberContactNumber', 'Member Contact Number is Required.', "warning");
+        return;
+    }
+    if (!FieldValidation('#Member_MemberEmployerId')) {
+        FieldValidationAlert('#Member_MemberEmployerId', 'Employer Name is Required.', "warning");
         return;
     }
   
-    var _MemberId = $("#MemberId").val();
+    var _MemberId = $("#Member_MemberId").val();
+    if (_MemberId == undefined) {
+        _MemberId = $("#MemberId").val();
+    }
+    
     if (_MemberId > 0) {
         $("#btnSave").prop('value', 'Updating Member');
     }
@@ -85,7 +105,7 @@ var SaveMember = function () {
                     document.getElementById("btnAddEditMemberClose").click();
                     if ((result.CurrentURL == "/") || ("/Member/Index")){
                         setTimeout(function () {
-                            $('#tblMember').DataTable().ajax.reload();
+                            $('#tblBranchMembers').DataTable().ajax.reload();
                         }, 1000);
                     }
                     else {
@@ -99,7 +119,7 @@ var SaveMember = function () {
                     icon: "warning"
                 }).then(function () {
                     setTimeout(function () {
-                        $('#Email').focus();
+                        $('#Member_MemberFirstname').focus();
                     }, 400);
                 });
             }
@@ -113,8 +133,17 @@ var SaveMember = function () {
 
 var PreparedFormObj = function () {
     var _FormData = new FormData()
-    _FormData.append('MemberId', $("#MemberId").val())
-    _FormData.append('MemberName', $("#MemberName").val())
-    
+    var _MemberId = $("#Member_MemberId").val();
+    if (_MemberId == undefined) {
+        _MemberId = $("#MemberId").val();
+    }
+    _FormData.append('MemberId', _MemberId)
+    _FormData.append('MemberFirstname', $("#Member_MemberFirstname").val())
+    _FormData.append('MemberSurname', $("#Member_MemberSurname").val())
+    _FormData.append('MemberMiddleName', $("#Member_MemberMiddleName").val())
+    _FormData.append('MemberIdNumber', $("#Member_MemberIdNumber").val())
+    _FormData.append('MemberContactNumber', $("#Member_MemberContactNumber").val())
+    _FormData.append('MemberAddress', $("#Member_MemberAddress").val())
+    _FormData.append('MemberEmployerId', $("#Member_MemberEmployerId").val())
     return _FormData;
 }

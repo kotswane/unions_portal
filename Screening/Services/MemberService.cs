@@ -1,47 +1,46 @@
-﻿using CompliancePortal.Repository.AsyncInterface;
+﻿using CompliancePortal.Models;
+using CompliancePortal.Repository.AsyncInterface;
 using CompliancePortal.Repository.Interface;
 using CompliancePortal.Services.Member;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static CompliancePortal.Pages.MainMenu;
 
 namespace CompliancePortal.Services
 {
     public class MemberService : IMemberService
     {
-        private readonly IasyncRepository<Models.BranchMembers> _memberRepository;
+        private readonly IMemberRepository _memberRepository;
 
-        public MemberService(IasyncRepository<Models.BranchMembers> memberRepository)
+        public MemberService(IMemberRepository memberRepository)
         {
             _memberRepository = memberRepository;
         }
 
-        public async Task<IEnumerable<Models.BranchMembers>> GetAllMembersAsync()
+        public async Task<IEnumerable<BranchMembersDTO>> GetAllAsync(long memberBranchId)
         {
-            return await _memberRepository.GetAllAsync();
+            return await _memberRepository.GetAllAsync(memberBranchId);
         }
 
-        public async Task<Models.BranchMembers> GetMemberByIdAsync(long id)
+        public async Task<long> AddAsync(BranchMembers member)
         {
-            return await _memberRepository.GetByIdAsync(id);
+            return await _memberRepository.AddAsync(member);
+        }        
+        
+
+        public async Task<BranchMembers> GetByIdAsync(long memberId)
+        {
+            return await _memberRepository.GetByIdAsync(memberId);
         }
 
-        public async Task AddMemberAsync(Models.BranchMembers member)
+        public async Task<int> DeleteAsync(long memberId)
         {
-            await _memberRepository.AddAsync(member);
+            return await _memberRepository.DeleteAsync(memberId);
         }
 
-        public async Task UpdateMemberAsync(Models.BranchMembers member)
+        public async Task<int> UpdateMemberAsync(BranchMembers memberId)
         {
-            await _memberRepository.UpdateAsync(member);
-        }
-
-        public async Task DeleteMemberAsync(long id)
-        {
-            await _memberRepository.DeleteAsync(id);
-        }
-        public async Task<IEnumerable<Models.BranchMembers>> GetMembersByBranchIdAsync(long branchId) // New method
-        {
-            return await _memberRepository.GetMembersByBranchIdAsync(branchId);
+            return await _memberRepository.UpdateMemberAsync(memberId);
         }
     }
 }

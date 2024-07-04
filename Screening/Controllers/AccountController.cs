@@ -85,8 +85,13 @@ namespace CompliancePortal.Controllers
                     _logger.LogInformation("User logged in.");
 
                     var accountLinkedToEntity = await _userService.GetApplicationUserLinkToEntity(model.Email);
+                    if (accountLinkedToEntity.LinkToEntityTypeValue == null)
+                    {
+                        accountLinkedToEntity.LinkToEntityTypeValue = "";
+                    }
+                    
                     HttpContext.Session.SetString("UserId", accountLinkedToEntity.UserId.ToString());
-                    HttpContext.Session.SetString("LinkToEntityTypeId", accountLinkedToEntity.LinkToEntityTypeId.ToString());
+                    HttpContext.Session.SetInt32("LinkToEntityTypeId", accountLinkedToEntity.LinkToEntityTypeId);
                     HttpContext.Session.SetString("LinkToEntityTypeValue", accountLinkedToEntity.LinkToEntityTypeValue.ToString());
                     // return RedirectToAction("EnableAuthenticator", "Manage");
                     return RedirectToAction("Index", "UserManagement");

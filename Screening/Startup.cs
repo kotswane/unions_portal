@@ -23,6 +23,7 @@ using CompliancePortal.Services.Branch.Interface;
 using CompliancePortal.Repository;
 using CompliancePortal.Services.Member;
 using CompliancePortal.Repository.AsyncInterface;
+using System.ComponentModel;
 
 namespace CompliancePortal
 {
@@ -85,10 +86,12 @@ namespace CompliancePortal
             services.AddTransient<IRoles, Roles>();
             services.AddTransient<IFunctional, Functional>();
             services.AddScoped(typeof(IRepository<>), typeof(BanchRepository<>));
-            services.AddScoped(typeof(IasyncRepository<>), typeof(MemberRepository<>));
+            services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IEmployerRepository, EmployerRepository>();
+            services.AddScoped<IEmployerService, EmployerService>();
 
             services.AddScoped<ApplicationUserRepository>();
 

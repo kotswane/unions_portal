@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Branch Members";
+    ViewData["Title"] = "Employers";
 }
 
 <div class="wrapper">
@@ -7,26 +7,22 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-6">
-                    <button class="btn btn-sm btn-success" onclick="AddEditMember(0)">Add New</button>
+                    <button class="btn btn-sm btn-success" onclick="CreateEmployer(0)">Add New</button>
                 </div>
                 <div class="col-md-6 pull-right">
-                    <h5 class="pull-right"><b>&nbsp;Branch Member List</b></h5>
+                    <h5 class="pull-right"><b>&nbsp;Employer List</b></h5>
                 </div>
             </div>
         </div>
         <div class="panel-body scroll panel-height">
-            <table id="tblBranchMembers" class="CustomBlueTable" style="width:100%">
+            <table id="tblEmployers" class="CustomBlueTable" style="width:100%">
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th>Last Name</th>
-                        <th>IdNumber</th>
+                        <th>Name</th>
+                        <th>Email</th>
                         <th>Address</th>
-                        <th>Contact Number</th>
-                        <th>Employer</th>
-                        <th>Branch</th>
+                        <th>ContactNumber</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -61,6 +57,6 @@
         }
 </style>
 
-<script src="~/js/Member/Member_CRUD.js"></script>
-<script src="~/js/Member/Member_Data.js"></script>
+<script src="~/js/Employer/Employer_CRUD.js"></script>
+<script src="~/js/Employer/Employer_Data.js"></script>
 

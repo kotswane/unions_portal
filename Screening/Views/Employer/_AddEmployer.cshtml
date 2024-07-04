@@ -1,0 +1,59 @@
+﻿@model CompliancePortal.Models.Employer
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="ApplicationUserForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.EmployerId" id="EmployerId" />
+                <input type="hidden" id="CurrentURL" />
+
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="form-group row">
+                            <label asp-for="@Model.EmployerName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.EmployerName" class="form-control" id="@Model.EmployerName" type="text" />
+                                <span asp-validation-for="@Model.EmployerName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="@Model.EmployerAddress" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.EmployerAddress" class="form-control" id="@Model.EmployerAddress" type="text" />
+                                <span asp-validation-for="@Model.EmployerAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="@Model.EmployerEmail" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.EmployerEmail" class="form-control" id="@Model.EmployerEmail" type="text" />
+                                <span asp-validation-for="@Model.EmployerEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="@Model.EmployerContactNumber" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="@Model.EmployerContactNumber" class="form-control" id="@Model.EmployerContactNumber" type="text" />
+                                <span asp-validation-for="@Model.EmployerContactNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input type="button" id="btnSave" value="Save" onclick="SaveEmployer()" class="btn btn-info">
+                                <button type="button" id="btnAddEditEmployerClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $('#CurrentURL').val(window.location.pathname);
+</script>

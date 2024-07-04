@@ -7,6 +7,7 @@ using CompliancePortal.Services;
 using CompliancePortal.Services.Branch.Interface;
 using CompliancePortal.Services.Member;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,14 +24,14 @@ namespace CompliancePortal.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMemberService memberService;
-        private readonly IBranchService branchService;
+        private readonly IEmployerService employerService;
         public MemberController(UserManager<ApplicationUser> userManager,
             IMemberService memberService,
-            IBranchService branchService)
+            IEmployerService employerService)
         {
             _userManager = userManager;
             this.memberService = memberService;
-            this.branchService = branchService;
+            this.employerService = employerService;
         }
 
         [Authorize(Roles = UserManagement.RoleName)]
@@ -40,9 +41,13 @@ namespace CompliancePortal.Controllers
             return View();
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> GetAllBranchMembers()
+        public async Task<IActionResult> GetAllBrancMembers()
         {
+            int branchId = (int)HttpContext.Session.GetInt32("LinkToEntityTypeId");
+            
+            long branchIdlong = Convert.ToInt64(branchId);
             try
             {
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
@@ -57,7 +62,7 @@ namespace CompliancePortal.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var memberList = await memberService.GetAllMembersAsync();
+                var memberList = await memberService.GetAllAsync(branchIdlong);
 
                 //Search
                 if (!string.IsNullOrEmpty(searchValue))
@@ -76,62 +81,6 @@ namespace CompliancePortal.Controllers
             {
                 throw ex;
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetMembersByBranch(long branchId)
-        {
-
-            try
-            {
-                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-                var start = Request.Form["start"].FirstOrDefault();
-                var length = Request.Form["length"].FirstOrDefault();
-
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-                var sortColumnAscDesc = Request.Form["order[0][dir]"].FirstOrDefault();
-                var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-                int pageSize = length != null ? Convert.ToInt32(length) : 0;
-                int skip = start != null ? Convert.ToInt32(start) : 0;
-                int resultTotal = 0;
-
-                var memberList = await memberService.GetMembersByBranchIdAsync(Convert.ToInt64(branchId));
-
-                //Search
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    searchValue = searchValue.ToLower();
-                    memberList = memberList.Where(obj => obj.MemberFirstname.ToLower().Contains(searchValue));
-                }
-
-                resultTotal = memberList.Count();
-
-                var result = memberList.Skip(skip).Take(pageSize).ToList();
-                return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = memberList });
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetMemberById(long id)
-        {
-
-            var member = await memberService.GetMemberByIdAsync(id);
-            return Json(new { data = member });
-        }
-
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteMember(long id)
-        {
-            await memberService.DeleteMemberAsync(id);
-            return Json(new { data = "Success" });
         }
 
 
@@ -141,16 +90,28 @@ namespace CompliancePortal.Controllers
         {
             var _branchViewModel = new BranchMembers();
             var memberDetails = new MemberApplicationUser();
-            memberDetails.Employers = new();
+
+            memberDetails.Employers = (List<Models.Employer>)await employerService.GetAllEmployers();
             if (id > 0)
             {
-                memberDetails.Member = await memberService.GetMemberByIdAsync(id);
+                memberDetails.Member = await memberService.GetByIdAsync(id);
 
                 return PartialView("_EditMember", memberDetails);
             }
-
-            memberDetails.Member = new BranchMembers();
+            memberDetails.Member = new();
             return PartialView("_AddMember", memberDetails);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMember(long id)
+        {
+
+            var result = await memberService.DeleteAsync(id);
+            if(result > 0)
+            {
+                return Json(new { data = "Error" });
+            }
+            return Json(new { data = "Success" });
         }
 
 
@@ -158,12 +119,32 @@ namespace CompliancePortal.Controllers
         public async Task<JsonResult> AddEditMember(BranchMembers member)
         {
             JsonResultViewModel _JsonResultViewModel = new JsonResultViewModel();
+            int branchId = (int)HttpContext.Session.GetInt32("LinkToEntityTypeId");
+
+            long branchIdlong = Convert.ToInt64(branchId);
+
+
             try
             {
 
                 if (member.MemberId == 0)
                 {
-                    await memberService.AddMemberAsync(member);
+
+                    member.MemberBranchId = branchIdlong;
+
+                    ViewBag.LinkToEntityTypeId = member.MemberBranchId;
+
+                    await memberService.AddAsync(new BranchMembers { 
+                    MemberAddress = member.MemberAddress,
+                    MemberBranchId = member.MemberBranchId,
+                    Employer = member.Employer,
+                    MemberContactNumber = member.MemberContactNumber,
+                    MemberEmployerId = member.MemberEmployerId,
+                    MemberFirstname = member.MemberFirstname,
+                    MemberIdNumber = member.MemberIdNumber,
+                    MemberMiddleName = member.MemberMiddleName,
+                    MemberSurname = member.MemberSurname
+                    });
 
                     _JsonResultViewModel.AlertMessage = $"BranchMembers Created Successfully. BranchMembers Name:  {member.MemberFirstname} {member.MemberSurname}";
                     //_JsonResultViewModel.CurrentURL = _UserProfileViewModel.CurrentURL;
@@ -173,10 +154,13 @@ namespace CompliancePortal.Controllers
                 }
                 else
                 {
-                    await memberService.UpdateMemberAsync(member);
-                    _JsonResultViewModel.AlertMessage = $"BranchMembers Update Successfully. BranchMembers Name: {member.MemberFirstname} {member.MemberSurname}";
-                    //_JsonResultViewModel.CurrentURL = _UserProfileViewModel.CurrentURL;
+                    
+                    var result = await memberService.UpdateMemberAsync(member);
                     _JsonResultViewModel.IsSuccess = true;
+                    _JsonResultViewModel.AlertMessage = $"BranchMembers Update Successfully. BranchMembers Name: {member.MemberFirstname} {member.MemberSurname}";
+              
+                    //_JsonResultViewModel.CurrentURL = _UserProfileViewModel.CurrentURL;
+                    
                     return new JsonResult(_JsonResultViewModel);
                 }
             }

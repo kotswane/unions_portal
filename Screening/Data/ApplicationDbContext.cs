@@ -18,7 +18,7 @@ namespace CompliancePortal.Data
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<UserProfile> UserProfile { get; set; }
         public DbSet<Branch> Branch { get; set; }
-        public DbSet<Employer> Employer { get; set; }
+        public DbSet<Employer> Employers { get; set; }
         public DbSet<BranchMembers> BranchMember { get; set; }
         public DbSet<SMTPEmailSetting> SMTPEmailSetting { get; set; }
         public DbSet<SendGridSetting> SendGridSetting { get; set; }
